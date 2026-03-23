@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import articlesData from '@/data/articles.json';
@@ -57,7 +58,7 @@ function SearchResults() {
       ) : results.length === 0 ? (
         <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
           <p className="text-dcyfr-primary-300">No results for &quot;{query}&quot;.</p>
-          <p className="text-xs text-dcyfr-primary-300 mt-2">Try a different keyword or browse by <a href="/articles" className="text-dcyfr-accent-300 hover:text-white transition-colors">category</a>.</p>
+          <p className="text-xs text-dcyfr-primary-300 mt-2">Try a different keyword or browse by <Link href="/articles" className="text-dcyfr-accent-300 hover:text-white transition-colors">category</Link>.</p>
         </div>
       ) : (
         <div className="space-y-3">

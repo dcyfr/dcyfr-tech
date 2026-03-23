@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import articles from '@/data/articles.json';
 import type { Article, ArticleCategory } from '@/lib/types';
 import { ArticleCard } from '@/components/ArticleCard';
@@ -77,9 +78,9 @@ export default function HomePage() {
           <section className="mb-12" aria-label="Recent articles">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-medium text-dcyfr-primary-300 uppercase tracking-wider">Recent</h2>
-              <a href="/articles" className="text-xs text-dcyfr-primary-300 hover:text-white transition-colors">
+              <Link href="/articles" className="text-xs text-dcyfr-primary-300 hover:text-white transition-colors">
                 All articles →
-              </a>
+              </Link>
             </div>
             <div className="space-y-3">
               {recent.map((article) => (
@@ -94,7 +95,7 @@ export default function HomePage() {
           <h2 className="text-sm font-medium text-dcyfr-primary-300 uppercase tracking-wider mb-6">Browse by Topic</h2>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {byCategory.map(({ category, articles: cats }) => (
-              <a
+              <Link
                 key={category}
                 href={`/articles?category=${encodeURIComponent(category)}`}
                 className="group rounded-xl border border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 p-4 hover:border-dcyfr-accent/40 transition-colors"
@@ -105,7 +106,7 @@ export default function HomePage() {
                 <p className="text-xs text-dcyfr-primary-300 mt-1">
                   {cats.length} {cats.length === 1 ? 'article' : 'articles'}
                 </p>
-              </a>
+              </Link>
             ))}
           </div>
         </section>

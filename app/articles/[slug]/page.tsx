@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import articles from '@/data/articles.json';
 import type { Article } from '@/lib/types';
@@ -65,9 +66,9 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
         <div className="mx-auto max-w-3xl">
           {/* Breadcrumb */}
           <nav className="mb-8 flex items-center gap-2 text-sm text-dcyfr-primary-300" aria-label="Breadcrumb">
-            <a href="/" className="hover:text-white transition-colors">dcyfr.tech</a>
+            <Link href="/" className="hover:text-white transition-colors">dcyfr.tech</Link>
             <span aria-hidden="true">/</span>
-            <a href="/articles" className="hover:text-white transition-colors">Articles</a>
+            <Link href="/articles" className="hover:text-white transition-colors">Articles</Link>
             <span aria-hidden="true">/</span>
             <span className="text-dcyfr-primary-200" aria-current="page">{article.title}</span>
           </nav>
@@ -100,13 +101,13 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
               <p className="text-xs text-dcyfr-primary-300 mb-2">Tags</p>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
-                  <a
+                  <Link
                     key={tag}
                     href={`/search?q=${encodeURIComponent(tag)}`}
                     className="rounded-full border border-dcyfr-primary-700/60 bg-dcyfr-primary-800/60 px-2.5 py-0.5 text-xs text-dcyfr-primary-200 hover:border-dcyfr-accent/40 hover:text-white transition-colors"
                   >
                     {tag}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -114,9 +115,9 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
 
           {/* Back link */}
           <div className="mt-10">
-            <a href="/articles" className="text-sm text-dcyfr-primary-300 hover:text-white transition-colors">
+            <Link href="/articles" className="text-sm text-dcyfr-primary-300 hover:text-white transition-colors">
               ← All articles
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -30,13 +31,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <header className="border-b border-dcyfr-primary-800/60 bg-dcyfr-primary-950/80 backdrop-blur sticky top-0 z-50">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
-            <a href="/" className="font-semibold text-white hover:text-dcyfr-accent-300 transition-colors">
+            <Link href="/" className="font-semibold text-white hover:text-dcyfr-accent-300 transition-colors">
               dcyfr<span className="text-dcyfr-accent-400">.tech</span>
-            </a>
+            </Link>
             <nav className="flex items-center gap-6 text-sm" aria-label="Main navigation">
-              <a href="/articles" className="text-dcyfr-primary-300 hover:text-white transition-colors">Articles</a>
-              <a href="/whitepapers" className="text-dcyfr-primary-300 hover:text-white transition-colors">Whitepapers</a>
-              <a href="/search" className="text-dcyfr-primary-300 hover:text-white transition-colors">Search</a>
+              <Link href="/articles" className="text-dcyfr-primary-300 hover:text-white transition-colors">Articles</Link>
+              <Link href="/whitepapers" className="text-dcyfr-primary-300 hover:text-white transition-colors">Whitepapers</Link>
+              <Link href="/search" className="text-dcyfr-primary-300 hover:text-white transition-colors">Search</Link>
               <a
                 href="https://dcyfr.io"
                 className="text-dcyfr-primary-300 hover:text-white transition-colors"
@@ -65,7 +66,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 </p>
               </div>
               <div className="flex items-center gap-4 text-xs text-dcyfr-primary-300">
-                <a href="/rss.xml" className="hover:text-white transition-colors">RSS</a>
+                <Link href="/rss.xml" className="hover:text-white transition-colors">RSS</Link>
                 <span aria-hidden="true" className="text-dcyfr-primary-700">·</span>
                 <a href="https://dcyfr.io" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">dcyfr.io</a>
                 <span aria-hidden="true" className="text-dcyfr-primary-700">·</span>
