@@ -1,0 +1,118 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+import articlesData from '@/data/articles.json';
+import type { Article, ArticleCategory } from '@/lib/types';
+import { ArticleCard } from '@/components/ArticleCard';
+
+const articles = articlesData as Article[];
+
+const CATEGORIES: ArticleCategory[] = [
+  'Agent Patterns',
+  'Context Engineering',
+  'RAG',
+  'Code Generation',
+  'Infrastructure',
+  'Security',
+  'Workspace',
+  'Releases',
+];
+
+export default function ArticlesPage() {
+  const [search, setSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState<ArticleCategory | null>(null);
+
+  const filtered = useMemo(() => {
+    return articles
+      .filter((a) => {
+        const matchesCategory = activeCategory === null || a.category === activeCategory;
+        const q = search.toLowerCase();
+        const matchesSearch =
+          q === '' ||
+          a.title.toLowerCase().includes(q) ||
+          a.description.toLowerCase().includes(q) ||
+          a.tags.some((t) => t.toLowerCase().includes(q));
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  }, [search, activeCategory]);
+
+  return (
+    <div className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl">
+        <h1 className="text-3xl font-bold text-white mb-2">Articles</h1>
+        <p className="text-dcyfr-primary-300 mb-8">
+          {articles.length} articles on agent patterns, context engineering, and AI infrastructure.
+        </p>
+
+        {/* Search */}
+        <div className="relative mb-6">
+          <svg
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dcyfr-primary-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="search"
+            placeholder="Search articles..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-dcyfr-primary-700/60 bg-dcyfr-primary-900/60 pl-10 pr-4 py-2.5 text-sm text-white placeholder-dcyfr-primary-400 focus:border-dcyfr-accent/60 focus:outline-none focus:ring-1 focus:ring-dcyfr-accent/40"
+            aria-label="Search articles"
+          />
+        </div>
+
+        {/* Category filter */}
+        <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter by category">
+          <button
+            onClick={() => setActiveCategory(null)}
+            className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+              activeCategory === null
+                ? 'border-dcyfr-accent-700 bg-dcyfr-accent-700 text-white'
+                : 'border-dcyfr-primary-700/60 bg-dcyfr-primary-800/40 text-dcyfr-primary-300 hover:border-dcyfr-accent/40 hover:text-white'
+            }`}
+          >
+            All
+          </button>
+          {CATEGORIES.filter((c) => articles.some((a) => a.category === c)).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                activeCategory === cat
+                  ? 'border-dcyfr-accent-700 bg-dcyfr-accent-700 text-white'
+                  : 'border-dcyfr-primary-700/60 bg-dcyfr-primary-800/40 text-dcyfr-primary-300 hover:border-dcyfr-accent/40 hover:text-white'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Results */}
+        {filtered.length === 0 ? (
+          <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
+            <p className="text-dcyfr-primary-300">No articles match your search.</p>
+            <button
+              onClick={() => { setSearch(''); setActiveCategory(null); }}
+              className="mt-3 text-sm text-dcyfr-accent-300 hover:text-white transition-colors"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-xs text-dcyfr-primary-300 mb-4">{filtered.length} article{filtered.length !== 1 ? 's' : ''}</p>
+            {filtered.map((article) => (
+              <ArticleCard key={article.id} article={article} variant="compact" />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

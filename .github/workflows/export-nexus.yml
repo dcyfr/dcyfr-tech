@@ -1,0 +1,69 @@
+name: Export Nexus Content
+
+on:
+  schedule:
+    # Weekly on Monday at 06:00 UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (do not commit changes)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  export:
+    name: Export Nexus → articles.json
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dcyfr-tech-blog
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout dcyfr-workspace (Nexus content)
+        uses: actions/checkout@v4
+        with:
+          repository: dcyfr/dcyfr-workspace
+          token: ${{ secrets.DCYFR_WORKSPACE_PAT }}
+          path: dcyfr-workspace
+          sparse-checkout: nexus
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Export Nexus content
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+        run: |
+          node scripts/export-nexus-content.mjs \
+            --nexus-root ./dcyfr-workspace/nexus \
+            $DRY_RUN
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --exit-code data/articles.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true' && github.event.inputs.dry_run != 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'content: sync articles from Nexus'
+          branch: nexus-content-sync
+          title: 'content: Nexus content sync'
+          body: |
+            Automated content sync from dcyfr-workspace Nexus.
+
+            This PR was created by the weekly Nexus export workflow.
+            Review the changes to `data/articles.json` before merging.
+          labels: content,automated
+          delete-branch: true

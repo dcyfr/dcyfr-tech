@@ -1,0 +1,14 @@
+[
+  {
+    "id": "delegation-framework-spec",
+    "slug": "delegation-framework-spec",
+    "title": "DCYFR Delegation Framework: Technical Specification v2.0",
+    "abstract": "Formal specification for the DCYFR agent delegation system — contract schema, execution model, security middleware, and observability protocol. Includes reference implementation in TypeScript.",
+    "author": "DCYFR Team",
+    "publishedAt": "2026-03-15T00:00:00Z",
+    "downloadUrl": "https://github.com/dcyfr/dcyfr-ai/releases/latest",
+    "category": "Agent Patterns",
+    "tags": ["delegation", "specification", "TypeScript", "security"],
+    "pages": 24
+  }
+]
