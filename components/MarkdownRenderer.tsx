@@ -20,10 +20,18 @@ function parseMarkdown(md: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
+  // Stash code blocks and inline code as placeholders so inline patterns
+  // (bold, etc.) are not applied inside code spans.
+  const codeStash: string[] = [];
+  const stash = (raw: string) => { codeStash.push(raw); return `\x00c${codeStash.length - 1}\x00`; };
+
   // Code blocks (``` ... ```) — must be before other replacements
-  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_m, _lang, code) => {
-    return `<pre><code>${code.trimEnd()}</code></pre>`;
-  });
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_m, _lang, code) =>
+    stash(`<pre><code>${code.trimEnd()}</code></pre>`)
+  );
+
+  // Inline code — stash before bold so **x** inside `code` is not parsed
+  html = html.replace(/`([^`]+)`/g, (_m, code) => stash(`<code>${code}</code>`));
 
   // Headings
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
@@ -36,9 +44,6 @@ function parseMarkdown(md: string): string {
   // Bold
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
-  // Inline code
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
   // Blockquotes
   html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
 
@@ -50,11 +55,11 @@ function parseMarkdown(md: string): string {
     return `<tr>${cells.map((c) => `<td>${c}</td>`).join('')}</tr>`;
   });
   // Wrap consecutive table rows
-  html = html.replace(/(<tr>.*?<\/tr>\n?)+/gs, (block) => {
+  html = html.replace(/(<tr>[\s\S]*?<\/tr>\n?)+/g, (block) => {
     const rows = block.split('<table-separator>').join('');
     // First row becomes header
     const firstEnd = rows.indexOf('</tr>') + 5;
-    const headerRow = rows.slice(0, firstEnd).replace(/<td>/g, '<th>').replace(/<\/td>/g, '</th>');
+    const headerRow = rows.slice(0, firstEnd).replace(/<td>/g, '<th scope="col">').replace(/<\/td>/g, '</th>');
     const bodyRows = rows.slice(firstEnd);
     return `<table><thead>${headerRow}</thead><tbody>${bodyRows}</tbody></table>`;
   });
@@ -87,6 +92,9 @@ function parseMarkdown(md: string): string {
       return isBlock ? trimmed : `<p>${trimmed.replace(/\n/g, ' ')}</p>`;
     })
     .join('\n');
+
+  // Restore stashed code blocks and inline code
+  html = html.replace(/\x00c(\d+)\x00/g, (_m, i) => codeStash[parseInt(i)]);
 
   return html;
 }

@@ -50,7 +50,8 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          git diff --exit-code data/articles.json || echo "changed=true" >> $GITHUB_OUTPUT
+          git add -f data/articles.json
+          git diff --cached --exit-code data/articles.json || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Create pull request
         if: steps.changes.outputs.changed == 'true' && github.event.inputs.dry_run != 'true'

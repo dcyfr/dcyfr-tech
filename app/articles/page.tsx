@@ -69,6 +69,7 @@ export default function ArticlesPage() {
         {/* Category filter */}
         <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter by category">
           <button
+            type="button"
             onClick={() => setActiveCategory(null)}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
               activeCategory === null
@@ -81,6 +82,7 @@ export default function ArticlesPage() {
           {CATEGORIES.filter((c) => articles.some((a) => a.category === c)).map((cat) => (
             <button
               key={cat}
+              type="button"
               onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 activeCategory === cat
@@ -98,6 +100,7 @@ export default function ArticlesPage() {
           <div className="rounded-xl border border-dcyfr-primary-800/40 bg-dcyfr-primary-900/40 p-10 text-center">
             <p className="text-dcyfr-primary-300">No articles match your search.</p>
             <button
+              type="button"
               onClick={() => { setSearch(''); setActiveCategory(null); }}
               className="mt-3 text-sm text-dcyfr-accent-300 hover:text-white transition-colors"
             >
@@ -106,7 +109,7 @@ export default function ArticlesPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-xs text-dcyfr-primary-300 mb-4">{filtered.length} article{filtered.length !== 1 ? 's' : ''}</p>
+            <p className="text-xs text-dcyfr-primary-300 mb-4" aria-live="polite" aria-atomic="true">{filtered.length} article{filtered.length !== 1 ? 's' : ''}</p>
             {filtered.map((article) => (
               <ArticleCard key={article.id} article={article} variant="compact" />
             ))}
