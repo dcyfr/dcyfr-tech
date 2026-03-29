@@ -37,11 +37,11 @@ export function ArticleCard({ article, variant = 'full' }: Readonly<ArticleCardP
 
   const categoryColors: Record<string, string> = {
     'Agent Patterns': 'border-dcyfr-accent/30 bg-dcyfr-accent/10 text-dcyfr-accent-300',
-    'Context Engineering': 'border-purple-500/30 bg-purple-500/10 text-purple-300',
-    'RAG': 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
-    'Code Generation': 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300',
-    'Infrastructure': 'border-orange-500/30 bg-orange-500/10 text-orange-300',
-    'Security': 'border-red-500/30 bg-red-500/10 text-red-300',
+    'Context Engineering': 'border-dcyfr-accent/30 bg-dcyfr-accent/10 text-dcyfr-accent-200',
+    'RAG': 'border-dcyfr-success/30 bg-dcyfr-success/10 text-dcyfr-success',
+    'Code Generation': 'border-dcyfr-warning/30 bg-dcyfr-warning/10 text-dcyfr-warning',
+    'Infrastructure': 'border-dcyfr-warning/30 bg-dcyfr-warning/10 text-dcyfr-warning',
+    'Security': 'border-dcyfr-error/30 bg-dcyfr-error/10 text-dcyfr-error',
     'Workspace': 'border-dcyfr-primary-500/30 bg-dcyfr-primary-500/10 text-dcyfr-primary-300',
     'Releases': 'border-dcyfr-primary-500/30 bg-dcyfr-primary-500/10 text-dcyfr-primary-300',
   };
